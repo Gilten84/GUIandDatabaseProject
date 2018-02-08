@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,6 +63,7 @@ public List<DBCommonObject> getAllObjects(String table) throws Exception
 	{
 		myStat = myConn.createStatement();
 		myRs=myStat.executeQuery("select * from "+table);
+		
 		Class<?> c = Class.forName(props.getProperty(table));
 		System.out.println(c.getName()+" "+c.getSimpleName());
 		Class<ResultSet> clazz = (Class<ResultSet>)Class.forName("java.sql.ResultSet");
@@ -76,13 +78,47 @@ public List<DBCommonObject> getAllObjects(String table) throws Exception
 		
 		return list;
 	}
-	catch (Exception ex) { 
-		
-		ex.printStackTrace();
-		
-	}
+	catch (Exception ex) 
+	{ ex.printStackTrace();}
 	return null;
 }
+
+public List<DBCommonObject> searchInColumn(String table, String column_name, String value) throws Exception
+{
+	List<DBCommonObject> list = new ArrayList<>();
+	//PreparedStatement myStat = null;
+	Statement myStat = null;
+	ResultSet myRs = null;
+	try
+	{ 
+		//myStat = myConn.prepareStatement("select * from ? where ? like ?");
+		//myStat.setString(1,table);
+		//myStat.setString(2,column_name);
+		//myStat.setString(3,value);
+		//myRs=myStat.executeQuery();
+		myStat = myConn.createStatement();
+		myRs=myStat.executeQuery("select * from "+table+" where "+column_name+" like \""+value+"\"");
+		Class<?> c = Class.forName(props.getProperty(table));
+		System.out.println(c.getName()+" "+c.getSimpleName());
+		Class<ResultSet> clazz = (Class<ResultSet>)Class.forName("java.sql.ResultSet");
+		Class[] classes = new Class[] {clazz};
+		Object[] args = new Object[]{myRs};
+		while (myRs.next())
+		{
+				DBCommonObject obj = (DBCommonObject) c.getDeclaredConstructor(classes).newInstance(args);
+				list.add(obj);
+			
+		}
+		return list;
+	
+	}catch (Exception ex) 
+	{ex.printStackTrace();}
+	
+
+	return null;
+}
+
+
 
 public static void main(String[] args)
 {
@@ -95,7 +131,13 @@ public static void main(String[] args)
 	RecipeDAO dao = new RecipeDAO(file,dburl,user,password);
 	try {
 		List<DBCommonObject> dbc = dao.getAllObjects("doctors");
-		
+		dbc = dao.searchInColumn("doctors", "idDoctors","1");
+		if (dbc!=null)
+		for (DBCommonObject obj : dbc)
+		{
+			Doctor d = (Doctor) obj;
+			System.out.println(d.getId()+" "+d.getLast_name()+" "+d.getFirst_name()+" "+d.getId_code());
+		}
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
