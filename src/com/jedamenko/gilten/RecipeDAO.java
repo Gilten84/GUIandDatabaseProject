@@ -1,5 +1,9 @@
 package com.jedamenko.gilten;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,93 +11,96 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 
 
 public class RecipeDAO {
-private static Connection myConn;
-
-public RecipeDAO() throws Exception
+private Connection myConn;
+private List<String> accepted_tables= new ArrayList<String>();
+private Properties props = new Properties();
+public RecipeDAO (File properties, String dburl, String user, String password)
 {
-	//get db connection
-	
-	Properties props = new Properties();
-	props.load(new FileInputStream("sql\\demo.properties"));
-	
-	String user = props.getProperty("user");
-	String password = props.getProperty("password");
-	String dburl = props.getProperty("dburl");
-	System.out.println(user+" "+password+" "+dburl);
-	
-	//connect to database
-	
-	Class.forName("org.gjt.mm.mysql.Driver");
-	myConn = DriverManager.getConnection(dburl,user,password);
-	System.out.println("Successfully connected to "+dburl);
-}
-
-public static Doctor convertRowToDoctor (ResultSet rs)
-{
+	super(); 
 	try 
 	{
-		Doctor d = new Doctor (rs.getInt("idDoctors"),rs.getString("doctor_last_name"),rs.getString("doctor_first_name"),
-		rs.getString("doctor_id_code"));
-		return d;
-	} catch (NumberFormatException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	return null;
+		this.props.load(new FileInputStream(properties));
+
+		Enumeration keys = props.keys();
+		while (keys.hasMoreElements())
+		{
+			this.accepted_tables.add((String)keys.nextElement());
+		}
+		//connect to database
 	
+		Class.forName("org.gjt.mm.mysql.Driver");
+		myConn = DriverManager.getConnection(dburl,user,password);
+		System.out.println("Successfully connected to "+dburl);
+	}
+	catch (FileNotFoundException e) {e.printStackTrace();}
+	catch (ClassNotFoundException ex) {ex.printStackTrace();}
+	catch (SQLException ex) {ex.printStackTrace();}
+	catch (IOException e) {e.printStackTrace();}
 }
 
+
+
+
+
+
 //public static void main (String[] args)
-public static List<Doctor> getAllDoctors() throws Exception
+public List<DBCommonObject> getAllObjects(String table) throws Exception
 {
-	try {
-		RecipeDAO edao = new RecipeDAO();
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	List<Doctor> list = new ArrayList<>();
+	List<DBCommonObject> list = new ArrayList<>();
 	Statement myStat = null;
 	ResultSet myRs = null;
 	
 	try
 	{
 		myStat = myConn.createStatement();
-		myRs=myStat.executeQuery("select * from doctors");
-		System.out.println("I am here");
-	
+		myRs=myStat.executeQuery("select * from "+table);
+		Class<?> c = Class.forName(props.getProperty(table));
+		System.out.println(c.getName()+" "+c.getSimpleName());
+		Class<ResultSet> clazz = (Class<ResultSet>)Class.forName("java.sql.ResultSet");
+		Class[] classes = new Class[] {clazz};
+		Object[] args = new Object[]{myRs};
+		
 		while (myRs.next())
 		{
-			System.out.println(myRs.getString("idDoctors")+" "+myRs.getString("doctor_last_name")+" "+myRs.getString("doctor_first_name")+" "+myRs.getString("doctor_id_code"));
-			Doctor tempDoctor = convertRowToDoctor(myRs);
-			list.add(tempDoctor);
+			DBCommonObject obj = (DBCommonObject) c.getDeclaredConstructor(classes).newInstance(args);
+			list.add(obj);
 		}
 		
 		return list;
 	}
-	catch (Exception ex) {
-		//close(myStat, myRs);
+	catch (Exception ex) { 
+		
+		ex.printStackTrace();
+		
 	}
 	return null;
 }
 
 public static void main(String[] args)
 {
+	
+	
+	File file = new File("sql//schema.properties");
+	String user="root";
+	String password="toporpales#?2345";
+	String dburl="jdbc:mysql://localhost:3306/medication_assistant?autoReconnect=true&useSSL=false";
+	RecipeDAO dao = new RecipeDAO(file,dburl,user,password);
 	try {
-		getAllDoctors();
+		List<DBCommonObject> dbc = dao.getAllObjects("doctors");
+		
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
+	
 }
 	
 

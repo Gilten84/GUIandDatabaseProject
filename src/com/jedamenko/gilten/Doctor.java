@@ -1,17 +1,26 @@
 package com.jedamenko.gilten;
 
-public class Doctor 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class Doctor implements DBCommonObject
 {
 	private int id;
 	private String last_name;
 	private String first_name;
 	private String id_code;
-	public Doctor(int id, String last_name, String first_name, String id_code) {
+	public Doctor(ResultSet rs) {
+		
 		super();
-		this.id = id;
-		this.last_name = last_name;
-		this.first_name = first_name;
-		this.id_code = id_code;
+		try {
+			this.id = rs.getInt("idDoctors");
+			this.last_name = rs.getString("doctor_last_name");
+			this.first_name = rs.getString("doctor_first_name");
+			this.id_code =rs.getString("doctor_id_code");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public int getId() {
 		return id;

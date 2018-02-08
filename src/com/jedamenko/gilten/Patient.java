@@ -1,6 +1,6 @@
 package com.jedamenko.gilten;
 
-public class Patient 
+public class Patient implements DBCommonObject
 {
 	private int id;
 	private String last_name;

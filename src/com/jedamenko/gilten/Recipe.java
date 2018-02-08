@@ -1,6 +1,6 @@
 package com.jedamenko.gilten;
 
-public class Recipe 
+public class Recipe implements DBCommonObject
 {
 	private int id;
 	private String drug;
