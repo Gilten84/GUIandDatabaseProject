@@ -1,22 +1,7 @@
 package com.jedamenko.gilten;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
-import java.util.stream.Stream;
-
+import java.sql.*;
+import java.io.*;
+import java.util.*;
 
 
 public class RecipeDAO {
@@ -86,16 +71,10 @@ public List<DBCommonObject> getAllObjects(String table) throws Exception
 public List<DBCommonObject> searchInColumn(String table, String column_name, String value) throws Exception
 {
 	List<DBCommonObject> list = new ArrayList<>();
-	//PreparedStatement myStat = null;
 	Statement myStat = null;
 	ResultSet myRs = null;
 	try
-	{ 
-		//myStat = myConn.prepareStatement("select * from ? where ? like ?");
-		//myStat.setString(1,table);
-		//myStat.setString(2,column_name);
-		//myStat.setString(3,value);
-		//myRs=myStat.executeQuery();
+	{ 		
 		myStat = myConn.createStatement();
 		myRs=myStat.executeQuery("select * from "+table+" where "+column_name+" like \""+value+"\"");
 		Class<?> c = Class.forName(props.getProperty(table));
@@ -131,13 +110,19 @@ public static void main(String[] args)
 	RecipeDAO dao = new RecipeDAO(file,dburl,user,password);
 	try {
 		List<DBCommonObject> dbc = dao.getAllObjects("doctors");
-		dbc = dao.searchInColumn("doctors", "idDoctors","1");
-		if (dbc!=null)
+		dbc = dao.searchInColumn("recipes", "Doctors_idDoctors","2");
 		for (DBCommonObject obj : dbc)
 		{
-			Doctor d = (Doctor) obj;
-			System.out.println(d.getId()+" "+d.getLast_name()+" "+d.getFirst_name()+" "+d.getId_code());
+			Recipe r = (Recipe) obj;
+			System.out.println(r.getIdRecipes());
+			System.out.println(r.getRecipe_medicament());
+			System.out.println(r.getRecipe_morning_dosage());
+			System.out.println(r.getRecipe_day_dosage());
+			System.out.println(r.getRecipe_evening_dosage());
+			System.out.println(r.getPatients_idPatient());
+			System.out.println(r.getDoctors_idDoctors());
 		}
+		
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

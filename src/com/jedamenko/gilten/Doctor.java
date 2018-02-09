@@ -5,46 +5,47 @@ import java.sql.SQLException;
 
 public class Doctor implements DBCommonObject
 {
-	private int id;
-	private String last_name;
-	private String first_name;
-	private String id_code;
+	private int idDoctors;
+	private String doctor_last_name;
+	private String doctor_first_name;
+	private String doctor_id_code;
 	public Doctor(ResultSet rs) {
 		
 		super();
 		try {
-			this.id = rs.getInt("idDoctors");
-			this.last_name = rs.getString("doctor_last_name");
-			this.first_name = rs.getString("doctor_first_name");
-			this.id_code =rs.getString("doctor_id_code");
+			this.idDoctors = rs.getInt("idDoctors");
+			this.doctor_last_name = rs.getString("doctor_last_name");
+			this.doctor_first_name = rs.getString("doctor_first_name");
+			this.doctor_id_code =rs.getString("doctor_id_code");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	public int getId() {
-		return id;
+	public int getIdDoctors() {
+		return idDoctors;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setIdDoctors(int idDoctors) {
+		this.idDoctors = idDoctors;
 	}
-	public String getLast_name() {
-		return last_name;
+	public String getDoctor_last_name() {
+		return doctor_last_name;
 	}
-	public void setLast_name(String last_name) {
-		this.last_name = last_name;
+	public void setDoctor_last_name(String doctor_last_name) {
+		this.doctor_last_name = doctor_last_name;
 	}
-	public String getFirst_name() {
-		return first_name;
+	public String getDoctor_first_name() {
+		return doctor_first_name;
 	}
-	public void setFirst_name(String first_name) {
-		this.first_name = first_name;
+	public void setDoctor_first_name(String doctor_first_name) {
+		this.doctor_first_name = doctor_first_name;
 	}
-	public String getId_code() {
-		return id_code;
+	public String getDoctor_id_code() {
+		return doctor_id_code;
 	}
-	public void setId_code(String id_code) {
-		this.id_code = id_code;
+	public void setDoctor_id_code(String doctor_id_code) {
+		this.doctor_id_code = doctor_id_code;
 	}
+	
 
 }

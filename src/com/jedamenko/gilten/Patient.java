@@ -1,57 +1,74 @@
 package com.jedamenko.gilten;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Patient implements DBCommonObject
 {
-	private int id;
-	private String last_name;
-	private String first_name;
-	private String id_code;
-	private String floor;
-	private String room;
-	public Patient(int id, String last_name, String first_name, String id_code, String floor, String room) {
+	private int idPatient;
+	private String patient_last_name;
+	private String patient_first_name;
+	private String patient_id_code;
+	private String patient_floor;
+	private String patient_room;
+	private String patient_diagnosis;
+	public Patient(ResultSet rs) {
+		
 		super();
-		this.id = id;
-		this.last_name = last_name;
-		this.first_name = first_name;
-		this.id_code = id_code;
-		this.floor = floor;
-		this.room = room;
+		try {
+			this.idPatient = rs.getInt("idPatient");
+			this.patient_last_name = rs.getString("patient_last_name");
+			this.patient_first_name = rs.getString("patient_first_name");
+			this.patient_id_code = rs.getString("patient_first_name");
+			this.patient_floor = rs.getString("patient_floor");
+			this.patient_room = rs.getString("patient_room");
+			this.patient_diagnosis = rs.getString("patient_diagnosis");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	public int getId() {
-		return id;
+	public int getIdPatient() {
+		return idPatient;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setIdPatient(int idPatient) {
+		this.idPatient = idPatient;
 	}
-	public String getLast_name() {
-		return last_name;
+	public String getPatient_last_name() {
+		return patient_last_name;
 	}
-	public void setLast_name(String last_name) {
-		this.last_name = last_name;
+	public void setPatient_last_name(String patient_last_name) {
+		this.patient_last_name = patient_last_name;
 	}
-	public String getFirst_name() {
-		return first_name;
+	public String getPatient_first_name() {
+		return patient_first_name;
 	}
-	public void setFirst_name(String first_name) {
-		this.first_name = first_name;
+	public void setPatient_first_name(String patient_first_name) {
+		this.patient_first_name = patient_first_name;
 	}
-	public String getId_code() {
-		return id_code;
+	public String getPatient_id_code() {
+		return patient_id_code;
 	}
-	public void setId_code(String id_code) {
-		this.id_code = id_code;
+	public void setPatient_id_code(String patient_id_code) {
+		this.patient_id_code = patient_id_code;
 	}
-	public String getFloor() {
-		return floor;
+	public String getPatient_floor() {
+		return patient_floor;
 	}
-	public void setFloor(String floor) {
-		this.floor = floor;
+	public void setPatient_floor(String patient_floor) {
+		this.patient_floor = patient_floor;
 	}
-	public String getRoom() {
-		return room;
+	public String getPatient_room() {
+		return patient_room;
 	}
-	public void setRoom(String room) {
-		this.room = room;
+	public void setPatient_room(String patient_room) {
+		this.patient_room = patient_room;
+	}
+	public String getPatient_diagnosis() {
+		return patient_diagnosis;
+	}
+	public void setPatient_diagnosis(String patient_diagnosis) {
+		this.patient_diagnosis = patient_diagnosis;
 	}
 
 }
