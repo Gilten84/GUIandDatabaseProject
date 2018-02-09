@@ -108,10 +108,10 @@ public class MedicalManagementSystem extends JFrame {
 					String lastName = textField.getText();
 					if (lastName!=null && lastName.trim().length()>0)
 					{
-						list = dao.searchInColumn("doctors", "doctor_last_name", lastName);
+						list = dao.selectData("doctors", "select * from doctors where doctor_last_name like \""+lastName+"\"");
 					}else
 					{
-						list = dao.getAllObjects("doctors");
+						list = dao.selectData("doctors","select * from doctors");
 					}
 					for (DBCommonObject obj : list)
 					{

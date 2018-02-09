@@ -38,45 +38,18 @@ public RecipeDAO (File properties, String dburl, String user, String password)
 
 
 //public static void main (String[] args)
-public List<DBCommonObject> getAllObjects(String table) throws Exception
-{
-	List<DBCommonObject> list = new ArrayList<>();
-	Statement myStat = null;
-	ResultSet myRs = null;
-	
-	try
-	{
-		myStat = myConn.createStatement();
-		myRs=myStat.executeQuery("select * from "+table);
-		
-		Class<?> c = Class.forName(props.getProperty(table));
-		System.out.println(c.getName()+" "+c.getSimpleName());
-		Class<ResultSet> clazz = (Class<ResultSet>)Class.forName("java.sql.ResultSet");
-		Class[] classes = new Class[] {clazz};
-		Object[] args = new Object[]{myRs};
-		
-		while (myRs.next())
-		{
-			DBCommonObject obj = (DBCommonObject) c.getDeclaredConstructor(classes).newInstance(args);
-			list.add(obj);
-		}
-		
-		return list;
-	}
-	catch (Exception ex) 
-	{ ex.printStackTrace();}
-	return null;
-}
 
-public List<DBCommonObject> searchInColumn(String table, String column_name, String value) throws Exception
+
+public List<DBCommonObject> selectData(String table, String statement) throws Exception
 {
+	if (!this.accepted_tables.contains(table)) return null;
 	List<DBCommonObject> list = new ArrayList<>();
 	Statement myStat = null;
 	ResultSet myRs = null;
 	try
 	{ 		
 		myStat = myConn.createStatement();
-		myRs=myStat.executeQuery("select * from "+table+" where "+column_name+" like \""+value+"\"");
+		myRs=myStat.executeQuery(statement);
 		Class<?> c = Class.forName(props.getProperty(table));
 		Class<ResultSet> clazz = (Class<ResultSet>)Class.forName("java.sql.ResultSet");
 		Class[] classes = new Class[] {clazz};
@@ -92,11 +65,8 @@ public List<DBCommonObject> searchInColumn(String table, String column_name, Str
 	}catch (Exception ex) 
 	{ex.printStackTrace();}
 	
-
 	return null;
 }
-
-
 
 
 
