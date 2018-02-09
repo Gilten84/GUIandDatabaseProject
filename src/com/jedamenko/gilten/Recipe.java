@@ -70,5 +70,12 @@ public class Recipe implements DBCommonObject
 	public void setDoctors_idDoctors(int doctors_idDoctors) {
 		Doctors_idDoctors = doctors_idDoctors;
 	}
+	@Override
+	public String toString() {
+		return "Recipe [idRecipes=" + idRecipes + ", recipe_medicament=" + recipe_medicament
+				+ ", recipe_morning_dosage=" + recipe_morning_dosage + ", recipe_day_dosage=" + recipe_day_dosage
+				+ ", recipe_evening_dosage=" + recipe_evening_dosage + ", Patients_idPatient=" + Patients_idPatient
+				+ ", Doctors_idDoctors=" + Doctors_idDoctors + "]";
+	}
 	
 }

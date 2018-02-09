@@ -46,6 +46,11 @@ public class Doctor implements DBCommonObject
 	public void setDoctor_id_code(String doctor_id_code) {
 		this.doctor_id_code = doctor_id_code;
 	}
+	@Override
+	public String toString() {
+		return "Doctor [idDoctors=" + idDoctors + ", doctor_last_name=" + doctor_last_name + ", doctor_first_name="
+				+ doctor_first_name + ", doctor_id_code=" + doctor_id_code + "]";
+	}
 	
 
 }

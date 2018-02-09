@@ -78,7 +78,6 @@ public List<DBCommonObject> searchInColumn(String table, String column_name, Str
 		myStat = myConn.createStatement();
 		myRs=myStat.executeQuery("select * from "+table+" where "+column_name+" like \""+value+"\"");
 		Class<?> c = Class.forName(props.getProperty(table));
-		System.out.println(c.getName()+" "+c.getSimpleName());
 		Class<ResultSet> clazz = (Class<ResultSet>)Class.forName("java.sql.ResultSet");
 		Class[] classes = new Class[] {clazz};
 		Object[] args = new Object[]{myRs};
@@ -99,36 +98,6 @@ public List<DBCommonObject> searchInColumn(String table, String column_name, Str
 
 
 
-public static void main(String[] args)
-{
-	
-	
-	File file = new File("sql//schema.properties");
-	String user="root";
-	String password="toporpales#?2345";
-	String dburl="jdbc:mysql://localhost:3306/medication_assistant?autoReconnect=true&useSSL=false";
-	RecipeDAO dao = new RecipeDAO(file,dburl,user,password);
-	try {
-		List<DBCommonObject> dbc = dao.getAllObjects("doctors");
-		dbc = dao.searchInColumn("recipes", "Doctors_idDoctors","2");
-		for (DBCommonObject obj : dbc)
-		{
-			Recipe r = (Recipe) obj;
-			System.out.println(r.getIdRecipes());
-			System.out.println(r.getRecipe_medicament());
-			System.out.println(r.getRecipe_morning_dosage());
-			System.out.println(r.getRecipe_day_dosage());
-			System.out.println(r.getRecipe_evening_dosage());
-			System.out.println(r.getPatients_idPatient());
-			System.out.println(r.getDoctors_idDoctors());
-		}
-		
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	
-}
-	
+
 
 }

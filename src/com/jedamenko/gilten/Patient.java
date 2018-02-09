@@ -70,5 +70,11 @@ public class Patient implements DBCommonObject
 	public void setPatient_diagnosis(String patient_diagnosis) {
 		this.patient_diagnosis = patient_diagnosis;
 	}
+	@Override
+	public String toString() {
+		return "Patient [idPatient=" + idPatient + ", patient_last_name=" + patient_last_name + ", patient_first_name="
+				+ patient_first_name + ", patient_id_code=" + patient_id_code + ", patient_floor=" + patient_floor
+				+ ", patient_room=" + patient_room + ", patient_diagnosis=" + patient_diagnosis + "]";
+	}
 
 }
