@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import javax.swing.table.AbstractTableModel;
 
 import com.jedamenko.gilten.DBCommonObject;
+import com.jedamenko.gilten.tools.ClassAnalysisTools;
 
 public class RecipeDAOTableModel extends AbstractTableModel {
 	
@@ -75,7 +76,7 @@ public class RecipeDAOTableModel extends AbstractTableModel {
 	public Object getValueAt(int row, int column) 
 	{
 		DBCommonObject obj = rows.get(row);
-		List<String> getters = generateGettersList(clazz);
+		List<String> getters = ClassAnalysisTools.generateGettersList(clazz);
 		for (Method method : methods)
 		{
 			if (method.getName().equals(getters.get(column)))
@@ -100,29 +101,5 @@ public class RecipeDAOTableModel extends AbstractTableModel {
 		return null;
 	}
 	
-	private List<String> generateGettersList(Class<?> clazz)
-	{
-		Field[] fields = clazz.getDeclaredFields();
-		
-		List<String> field_names = Stream.of(fields).map
-				(f -> f.getName()).collect(Collectors.toList());
-		List<String> list_of_getters = new ArrayList<>();
-		for (String s : field_names)
-		{
-			if (!s.equals("getters"))
-			{
-				char[] arr = s.toCharArray();
-		        if (arr[0] >= 97 && arr[0] <= 122) 
-		        {
-		             s=s.replaceFirst("[a-z]", "get"+((char)(arr[0] - 32)));
-		             
-		        }
-		        list_of_getters.add(s);
-				 
-			}
-		}
-		
-		return list_of_getters;	
-	}
-
+	
 }

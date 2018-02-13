@@ -98,7 +98,7 @@ public class MedicalManagementSystem extends JFrame {
 		panel.add(textField);
 		textField.setColumns(10);
 		
-		JButton btnNewButton = new JButton("Search");
+		JButton btnNewButton = new JButton("Patients");
 		panel.add(btnNewButton);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -115,7 +115,7 @@ public class MedicalManagementSystem extends JFrame {
 					String lastName = textField.getText();
 					if (lastName!=null && lastName.trim().length()>0)
 					{
-						list = dao.selectData("patients", "select * from patients where patient_last_name like \""+lastName+"\"");
+						list = dao.selectData("patients", "select * from patients where lower(patient_last_name) like \""+lastName.toLowerCase()+"%\"");
 						
 					}else
 					{
