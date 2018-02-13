@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+encoding//schemas/Doctor.xsd=UTF-8
+encoding//schemas/Patient.xsd=UTF-8
+encoding//schemas/Recipe.xsd=UTF-8

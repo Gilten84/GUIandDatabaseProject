@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public class Patient implements DBCommonObject
 {
-	private int idPatient;
+	private String idPatient;
 	private String patient_last_name;
 	private String patient_first_name;
 	private String patient_id_code;
@@ -16,7 +16,7 @@ public class Patient implements DBCommonObject
 		
 		super();
 		try {
-			this.idPatient = rs.getInt("idPatient");
+			this.idPatient = rs.getString("idPatient");
 			this.patient_last_name = rs.getString("patient_last_name");
 			this.patient_first_name = rs.getString("patient_first_name");
 			this.patient_id_code = rs.getString("patient_first_name");
@@ -28,10 +28,10 @@ public class Patient implements DBCommonObject
 			e.printStackTrace();
 		}
 	}
-	public int getIdPatient() {
+	public String getIdPatient() {
 		return idPatient;
 	}
-	public void setIdPatient(int idPatient) {
+	public void setIdPatient(String idPatient) {
 		this.idPatient = idPatient;
 	}
 	public String getPatient_last_name() {

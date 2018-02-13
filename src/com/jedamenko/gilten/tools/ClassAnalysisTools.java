@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 public class ClassAnalysisTools 
 {
+	
 	public static List<String> generateGettersList(Class<?> clazz)
 	{
 		Field[] fields = clazz.getDeclaredFields();
