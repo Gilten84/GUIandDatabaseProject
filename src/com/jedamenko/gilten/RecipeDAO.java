@@ -68,6 +68,22 @@ public List<DBCommonObject> selectData(String table, String statement) throws Ex
 	return null;
 }
 
+public List<DBCommonObject> updateData(String table, String statement) throws Exception
+{
+	if (!this.accepted_tables.contains(table)) return null;
+	Statement myStat = null;
+	try
+	{ 		
+		myStat = myConn.createStatement();
+		myStat.executeUpdate(statement);
+		
+		
+	}catch (Exception ex) 
+	{ex.printStackTrace();}
+	
+	return null;
+}
+
 
 
 }

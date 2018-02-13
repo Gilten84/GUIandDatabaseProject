@@ -34,7 +34,6 @@ import java.awt.event.ActionEvent;
 public class MedicalManagementSystem extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
 	private JTable table;
 	private RecipeDAO dao;
 
@@ -87,43 +86,15 @@ public class MedicalManagementSystem extends JFrame {
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		contentPane.add(panel, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel = new JLabel("Enter last name:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		panel.add(lblNewLabel);
-		
-		JSeparator separator = new JSeparator();
-		panel.add(separator);
-		
-		textField = new JTextField();
-		panel.add(textField);
-		textField.setColumns(10);
-		
-		JButton btnNewButton = new JButton("Patients");
-		panel.add(btnNewButton);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		contentPane.add(scrollPane, BorderLayout.CENTER);
-		
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnPatients = new JButton("Patients");
+		panel.add(btnPatients);
+		btnPatients.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				try
 				{
 					List<DBCommonObject> list = new ArrayList<>();
-					String lastName = textField.getText();
-					if (lastName!=null && lastName.trim().length()>0)
-					{
-						list = dao.selectData("patients", "select * from patients where lower(patient_last_name) like \""+lastName.toLowerCase()+"%\"");
-						
-					}else
-					{
-						
-						list = dao.selectData("patients", "select * from patients");
-						
-					}
-					
+					list = dao.selectData("patients", "select * from patients");						
 					if(!list.isEmpty())
 					{
 						RecipeDAOTableModel model = new RecipeDAOTableModel(list);
@@ -135,6 +106,56 @@ public class MedicalManagementSystem extends JFrame {
 				}
 			}
 		});
+		
+		JButton btnRecipes = new JButton("Recipes");
+		btnRecipes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				try
+				{
+					List<DBCommonObject> list = new ArrayList<>();
+					list = dao.selectData("recipes", "select * from recipes");						
+					if(!list.isEmpty())
+					{
+						RecipeDAOTableModel model = new RecipeDAOTableModel(list);
+						table.setModel(model);
+					}
+				}catch (Exception ex)
+				{
+					JOptionPane.showMessageDialog(MedicalManagementSystem.this, "Error: "+ex,"Error",JOptionPane.CANCEL_OPTION);
+				}
+			}
+		});
+		panel.add(btnRecipes);
+		
+		JButton btnDoctors = new JButton("Doctors");
+		btnDoctors.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				{
+					try
+					{
+						List<DBCommonObject> list = new ArrayList<>();
+						list = dao.selectData("doctors", "select * from doctors");						
+						if(!list.isEmpty())
+						{
+							RecipeDAOTableModel model = new RecipeDAOTableModel(list);
+							table.setModel(model);
+						}
+					}catch (Exception ex)
+					{
+						JOptionPane.showMessageDialog(MedicalManagementSystem.this, "Error: "+ex,"Error",JOptionPane.CANCEL_OPTION);
+					}
+				}
+			}
+		});
+		panel.add(btnDoctors);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		contentPane.add(scrollPane, BorderLayout.CENTER);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		
 		
 	}
 
