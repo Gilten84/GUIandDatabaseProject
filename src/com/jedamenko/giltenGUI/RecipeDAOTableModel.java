@@ -1,47 +1,35 @@
 package com.jedamenko.giltenGUI;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import javax.swing.table.AbstractTableModel;
 
-import com.jedamenko.gilten.DBCommonObject;
-import com.jedamenko.gilten.tools.ClassAnalysisTools;
 
 public class RecipeDAOTableModel extends AbstractTableModel {
 	
-	private Class<?> clazz;
 	private List<String> column_names=new ArrayList<>();
-	private List<DBCommonObject> rows = new ArrayList<>();
-	private Field[] fields;
-	private Method[] methods;
-	public RecipeDAOTableModel(List<DBCommonObject> list) throws NullPointerException
+	private List<String[]> rows = new ArrayList<>();
+	public RecipeDAOTableModel(List<String[]> list, List<String> column_names) throws NullPointerException
 	{
 		super();
+		if (!column_names.isEmpty())
+		{
+			this.column_names=column_names;
+		}
+		else
+		{
+			throw new NullPointerException("Column names list is empty!");
+		}
+		this.column_names=column_names;
 		if (!list.isEmpty())
 		{
-			this.clazz = list.get(0).getClass();
 			this.rows=list;
-	
 		}
 		else
 		{
 			throw new NullPointerException("List is empty!");
 		}
-		
-		this.methods = clazz.getMethods();
-		this.fields = clazz.getDeclaredFields();
-		Stream.of(this.fields).forEach( (s) -> column_names.add(s.getName())); 
-		
-		
-		
 		
 	}
 
@@ -55,8 +43,14 @@ public class RecipeDAOTableModel extends AbstractTableModel {
 	@Override
 	public Class getColumnClass(int columnIndex)
 	{
-		System.out.println("getColumnClass: "+this.fields[columnIndex].getType());
-		return this.fields[columnIndex].getType();
+		try {
+			Class c = Class.forName("java.lang.String");
+			return c;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	@Override
 	public int getColumnCount() {
@@ -75,30 +69,9 @@ public class RecipeDAOTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int row, int column) 
 	{
-		DBCommonObject obj = rows.get(row);
-		List<String> getters = ClassAnalysisTools.generateGettersList(clazz);
-		for (Method method : methods)
-		{
-			if (method.getName().equals(getters.get(column)))
-			{
-				try {
-					Object value = method.invoke(obj);
-					return value;
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+		String value = rows.get(row)[column];
 		
-		// TODO Auto-generated method stub
-		return null;
+		return value;
 	}
 	
 	

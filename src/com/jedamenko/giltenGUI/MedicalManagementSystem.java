@@ -6,18 +6,14 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import com.jedamenko.gilten.DBCommonObject;
-import com.jedamenko.gilten.Doctor;
 import com.jedamenko.gilten.RecipeDAO;
 
 import java.awt.Font;
-import javax.swing.JLabel;
+
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
+
 import java.awt.FlowLayout;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
+
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -71,7 +67,7 @@ public class MedicalManagementSystem extends JFrame {
 		String user = props.getProperty("user");
 		String password = props.getProperty("password");
 		String dburl = props.getProperty("dburl");
-		this.dao = new RecipeDAO(file, dburl,user,password);
+		this.dao = new RecipeDAO(dburl,user,password);
 		setFont(new Font("Arial", Font.PLAIN, 12));
 		setTitle("Medical management system");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,11 +89,11 @@ public class MedicalManagementSystem extends JFrame {
 			{
 				try
 				{
-					List<DBCommonObject> list = new ArrayList<>();
+					List<String[]> list = new ArrayList<>();
 					list = dao.selectData("patients", "select * from patients");						
 					if(!list.isEmpty())
 					{
-						RecipeDAOTableModel model = new RecipeDAOTableModel(list);
+						RecipeDAOTableModel model = new RecipeDAOTableModel(list, dao.getColumn_names());
 						table.setModel(model);
 					}
 				}catch (Exception ex)
@@ -113,11 +109,11 @@ public class MedicalManagementSystem extends JFrame {
 			{
 				try
 				{
-					List<DBCommonObject> list = new ArrayList<>();
+					List<String[]> list = new ArrayList<>();
 					list = dao.selectData("recipes", "select * from recipes");						
 					if(!list.isEmpty())
 					{
-						RecipeDAOTableModel model = new RecipeDAOTableModel(list);
+						RecipeDAOTableModel model = new RecipeDAOTableModel(list, dao.getColumn_names());
 						table.setModel(model);
 					}
 				}catch (Exception ex)
@@ -134,11 +130,11 @@ public class MedicalManagementSystem extends JFrame {
 				{
 					try
 					{
-						List<DBCommonObject> list = new ArrayList<>();
+						List<String[]> list = new ArrayList<>();
 						list = dao.selectData("doctors", "select * from doctors");						
 						if(!list.isEmpty())
 						{
-							RecipeDAOTableModel model = new RecipeDAOTableModel(list);
+							RecipeDAOTableModel model = new RecipeDAOTableModel(list, dao.getColumn_names());
 							table.setModel(model);
 						}
 					}catch (Exception ex)
