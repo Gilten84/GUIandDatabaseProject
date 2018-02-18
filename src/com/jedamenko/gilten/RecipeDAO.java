@@ -6,7 +6,9 @@ import java.util.*;
 
 public class RecipeDAO {
 private Connection myConn;
+private String table_name;
 private List<String> column_names = new ArrayList<>();
+private List<String> schemas_list = new ArrayList<>();
 
 
 
@@ -28,9 +30,33 @@ public RecipeDAO (String dburl, String user, String password)
 		ResultSet rs = md.getTables(null, null, "%", null);
 		while (rs.next()) 
 		{
-		  accepted_tables.add(rs.getString(3));
+			String t = rs.getString(3); if (!t.equals("schemas")) accepted_tables.add(t);
 		}
 		
+		try
+		{
+			for (String t : accepted_tables)
+			{
+				Statement myStat=myConn.createStatement();
+				String sql = "SELECT `schema` FROM medication_assistant.`schemas` WHERE `table`='"+t+"'";
+				ResultSet myResult = myStat.executeQuery(sql);
+				File schema = new File ("schemas\\"+t+".xsd");
+				FileOutputStream output = new FileOutputStream(schema);
+				if (myResult.next())
+				{
+					InputStream input = myResult.getBinaryStream("schema");
+					
+					byte[] buffer = new byte[1024];
+					while (input.read(buffer) > 0)
+					{
+						output.write(buffer);
+					}
+				}
+				output.close();
+				
+			}
+		}
+		catch (IOException ex) {ex.printStackTrace();}
 		
 		
 	}
@@ -50,6 +76,7 @@ public RecipeDAO (String dburl, String user, String password)
 
 public List<String[]> selectData(String table, String statement) throws Exception
 {
+	this.table_name=table;
 	Statement stat = myConn.createStatement();
     ResultSet set = stat.executeQuery("select * from "+table);
     ResultSetMetaData data = set.getMetaData();
@@ -106,5 +133,10 @@ public List<String> getColumn_names()
 {
 	return column_names;
 }
+
+public String getTable_name() {
+	return table_name;
+}
+
 
 }
