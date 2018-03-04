@@ -101,6 +101,7 @@ public List<String[]> selectData(String table, String statement) throws Exceptio
 			for (int i = 0; i < number_of_columns; i++)
 			{
 				entry[i] = myRs.getString(column_names.get(i));
+				System.out.println(entry[i]);
 			}
 			list_of_entries.add(entry);
 			
